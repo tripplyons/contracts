@@ -2,7 +2,7 @@
 /// @author Tripp Lyons
 
 // solidity version
-pragma solidity ^0.4.17;
+pragma solidity 0.4.17;
 
 // in a penny auction, you have to pay the amount to bid, and ...
 // ... the auction ends when no one bids for some amount of time

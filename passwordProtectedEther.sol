@@ -1,8 +1,7 @@
+pragma solidity 0.4.17;
+
 /// @title Password-Protected Ether
 /// @author Tripp Lyons
-
-// solidity version
-pragma solidity ^0.4.17;
 
 // send ether to the contract with the hash of your withdraw password
 // to withdraw ether, send the password, and it will check if the ...
@@ -10,6 +9,7 @@ pragma solidity ^0.4.17;
 // WARNING: use a non-existent password because your password is sent ...
 // ... publicly during withdrawl
 contract PasswordProtectedEther {
+
     // store the balance of all 2^256 possible hashes (hard to crack)
     mapping (bytes32 => uint) public balanceOfHash;
 
@@ -41,4 +41,5 @@ contract PasswordProtectedEther {
         // make sure that ether can't be sent again
         balanceOfHash[hashToCheck] = 0;
     }
+
 }

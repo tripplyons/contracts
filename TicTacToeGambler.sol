@@ -2,12 +2,12 @@
 /// @author Tripp Lyons
 
 // solidity version
-pragma solidity ^0.4.15;
+pragma solidity 0.4.17;
 
 import "./gambler.sol";
 
 // creator is X, opponent is O
-contract TicTacToeGambler is gambler {
+contract TicTacToeGambler is Gambler {
     enum BoardSpace { Empty, X, O }
     enum WinState { Neither, X, O, Tie }
     // board:
@@ -52,78 +52,6 @@ contract TicTacToeGambler is gambler {
         ];
     }
 
-    function checkForWin(BoardSpace symbol) internal constant returns (bool) {
-        // row win
-        for(uint row = 0; row < 3; row++) {
-            // no other symbols
-            bool noOthers = true;
-            for(uint col = 0; col < 3; col++) {
-                if(board[row * 3 + col] != symbol) {
-                    noOthers = false;
-                }
-            }
-            if(noOthers) {
-                return true;
-            }
-        }
-        // column win
-        for(col = 0; col < 3; row++) {
-            // no other symbols
-            noOthers = true;
-            for(row = 0; row < 3; row++) {
-                if(board[row * 3 + col] != symbol) {
-                    noOthers = false;
-                }
-            }
-            if(noOthers) {
-                return true;
-            }
-        }
-
-        // diagonal down-right win
-        bool downRightWin = true;
-        for(uint i = 0; i < 3; i++) {
-            if(board[i * 3 + i] != symbol) {
-                downRightWin = false;
-            }
-        }
-        if(downRightWin) {
-            return true;
-        }
-
-        // diagonal down-left win
-        bool downLeftWin = true;
-        for(i = 0; i < 3; i++) {
-            if(board[i * 3 + (2 - i)] != symbol) {
-                downLeftWin = false;
-            }
-        }
-        return downLeftWin;
-    }
-
-    function checkForEnd() internal constant returns (WinState) {
-        if(checkForWin(BoardSpace.X)) {
-            return WinState.X;
-        }
-        if(checkForWin(BoardSpace.O)) {
-            return WinState.O;
-        }
-
-        // then check if it is full (a tie)
-        bool hasEncounteredEmpty = false;
-        for(uint i = 0; i < 9; i++) {
-            if(board[i] == BoardSpace.Empty) {
-                hasEncounteredEmpty = true;
-            }
-        }
-        // if it is, then tie
-        if(!hasEncounteredEmpty) {
-            return WinState.Tie;
-        }
-
-        return WinState.Neither;
-    }
-
     // do your turn, place X or O at `position`
     function turn(uint position) public {
         // make sure the sender is a player
@@ -154,5 +82,105 @@ contract TicTacToeGambler is gambler {
         if(gameState == WinState.O) {
             opponentWin();
         }
+    }
+
+    // row win
+    function checkForRowWin(
+        BoardSpace symbol
+    ) internal constant returns (bool win) {
+        for(uint row = 0; row < 3; row++) {
+            // no other symbols
+            bool noOthers = true;
+            for(uint col = 0; col < 3; col++) {
+                if(board[row * 3 + col] != symbol) {
+                    noOthers = false;
+                }
+            }
+            if(noOthers) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // column win
+    function checkForColumnWin(
+        BoardSpace symbol
+    ) internal constant returns (bool win) {
+        for(col = 0; col < 3; row++) {
+            // no other symbols
+            noOthers = true;
+            for(row = 0; row < 3; row++) {
+                if(board[row * 3 + col] != symbol) {
+                    noOthers = false;
+                }
+            }
+            if(noOthers) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // diagonal wins
+    function checkForDiagonalWins(
+        BoardSpace symbol
+    ) internal constant returns (bool win) {
+        // diagonal down-right win
+        bool downRightWin = true;
+        for(uint i = 0; i < 3; i++) {
+            if(board[i * 3 + i] != symbol) {
+                downRightWin = false;
+            }
+        }
+        if(downRightWin) {
+            return true;
+        }
+
+        // diagonal down-left win
+        bool downLeftWin = true;
+        for(i = 0; i < 3; i++) {
+            if(board[i * 3 + (2 - i)] != symbol) {
+                downLeftWin = false;
+            }
+        }
+
+        return downLeftWin;
+    }
+
+    function checkForWin(BoardSpace symbol) internal constant returns (bool win) {
+        if(checkForRowWin(symbol)) {
+            return true;
+        }
+
+        if(checkForColumnWin(symbol)) {
+            return true;
+        }
+
+
+        return checkForDiagonalWins(symbol);
+    }
+
+    function checkForEnd() internal constant returns (WinState) {
+        if(checkForWin(BoardSpace.X)) {
+            return WinState.X;
+        }
+        if(checkForWin(BoardSpace.O)) {
+            return WinState.O;
+        }
+
+        // then check if it is full (a tie)
+        bool hasEncounteredEmpty = false;
+        for(uint i = 0; i < 9; i++) {
+            if(board[i] == BoardSpace.Empty) {
+                hasEncounteredEmpty = true;
+            }
+        }
+        // if it is, then tie
+        if(!hasEncounteredEmpty) {
+            return WinState.Tie;
+        }
+
+        return WinState.Neither;
     }
 }

@@ -2,10 +2,10 @@
 /// @author Tripp Lyons
 
 // solidity version
-pragma solidity ^0.4.15;
+pragma solidity 0.4.17;
 
 // generalized game gambling manager
-contract gambler {
+contract Gambler {
     // the creator of the contract
     address public creator;
     // the player that plays against the creator
@@ -26,24 +26,6 @@ contract gambler {
     uint public timePerTurn;
 
     event GameStart();
-
-    function creatorWin() internal {
-        selfdestruct(creator);
-    }
-
-    function opponentWin() internal {
-        selfdestruct(opponent);
-    }
-
-    function tie() internal {
-        // make sure that the extra money paid to the contract by ...
-        // ... non-players is split like the bet
-        var betFromPlayers = creatorBet + opponentBet;
-        creator.transfer(creatorBet / betFromPlayers * this.balance);
-        opponent.transfer(opponentBet / betFromPlayers * this.balance);
-        // there should only be a few wei left from flooring
-        selfdestruct(creator);
-    }
 
     // anyone can put ether in to go to the winner
     function bet() public payable {
@@ -87,6 +69,24 @@ contract gambler {
                 creatorWin();
             }
         }
+    }
+
+    function creatorWin() internal {
+        selfdestruct(creator);
+    }
+
+    function opponentWin() internal {
+        selfdestruct(opponent);
+    }
+
+    function tie() internal {
+        // make sure that the extra money paid to the contract by ...
+        // ... non-players is split like the bet
+        var betFromPlayers = creatorBet + opponentBet;
+        creator.transfer(creatorBet / betFromPlayers * this.balance);
+        opponent.transfer(opponentBet / betFromPlayers * this.balance);
+        // there should only be a few wei left from flooring
+        selfdestruct(creator);
     }
 
     // toggle whose turn it is and restart the timer for them
