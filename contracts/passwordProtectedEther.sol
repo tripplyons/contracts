@@ -36,10 +36,10 @@ contract PasswordProtectedEther {
         bytes32 hashToCheck = keccak256(password);
         // make sure that there is ether in the hash's balance
         require(balanceOfHash[hashToCheck] > 0);
-        // send over the ether
-        msg.sender.transfer(balanceOfHash[hashToCheck]);
         // make sure that ether can't be sent again
         balanceOfHash[hashToCheck] = 0;
+        // send over the ether
+        msg.sender.transfer(balanceOfHash[hashToCheck]);
     }
 
 }

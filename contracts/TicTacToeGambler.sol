@@ -4,7 +4,7 @@
 // solidity version
 pragma solidity 0.4.15;
 
-import "./gambler.sol";
+import "./Gambler.sol";
 
 // creator is X, opponent is O
 contract TicTacToeGambler is Gambler {

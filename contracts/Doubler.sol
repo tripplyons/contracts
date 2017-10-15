@@ -1,6 +1,8 @@
 /// @title Ether Doubler Ponzi Scheme
 /// @author Tripp Lyons
 
+// tested manually
+
 // solidity version
 pragma solidity 0.4.15;
 
