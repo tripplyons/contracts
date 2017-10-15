@@ -27,13 +27,22 @@ contract('Doubler', function(accounts) {
                 "The current receiver is not the owner");
         })
     })
-    it("should error to withdraw from a non-owner", function() {
+    it("should error when withdrawing to a non-owner", function() {
         Doubler.deployed().then(function(instance) {
             return instance.withdraw.call(accounts[1])
         }).then(function() {
             assert(false, "The withdraw occurred")
         }).catch(function() {
             assert(true)
+        })
+    })
+    it("should not error when to withdrawing to the owner", function() {
+        Doubler.deployed().then(function(instance) {
+            return instance.withdraw.call(accounts[1])
+        }).then(function() {
+            assert(true)
+        }).catch(function() {
+            assert(false, "An error occurred when withdrawing")
         })
     })
     it("should accept 100 finney from accounts[1]", function() {
@@ -87,9 +96,11 @@ contract('Doubler', function(accounts) {
                 from: accounts[2],
                 value: web3.toWei(100, "finney")
             }).then(function() {
-                var endBalance = getBalance(owner)
-                assert(endBalance > startBalance,
-                    "The owner was not paid back")
+                setTimeout(function() {
+                    var endBalance = getBalance(owner)
+                    assert(endBalance > startBalance,
+                        "The owner was not paid back")
+                }, 5000)
             })
         })
     })
