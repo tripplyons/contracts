@@ -2,7 +2,7 @@
 /// @author Tripp Lyons
 
 // solidity version
-pragma solidity 0.4.17;
+pragma solidity 0.4.15;
 
 // generalized game gambling manager
 contract Gambler {

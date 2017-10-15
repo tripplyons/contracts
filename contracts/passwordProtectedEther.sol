@@ -1,4 +1,4 @@
-pragma solidity 0.4.17;
+pragma solidity 0.4.15;
 
 /// @title Password-Protected Ether
 /// @author Tripp Lyons

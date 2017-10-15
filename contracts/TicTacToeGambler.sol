@@ -2,7 +2,7 @@
 /// @author Tripp Lyons
 
 // solidity version
-pragma solidity 0.4.17;
+pragma solidity 0.4.15;
 
 import "./gambler.sol";
 
@@ -107,10 +107,10 @@ contract TicTacToeGambler is Gambler {
     function checkForColumnWin(
         BoardSpace symbol
     ) internal constant returns (bool win) {
-        for(col = 0; col < 3; row++) {
+        for(uint col = 0; col < 3; col++) {
             // no other symbols
-            noOthers = true;
-            for(row = 0; row < 3; row++) {
+            bool noOthers = true;
+            for(uint row = 0; row < 3; row++) {
                 if(board[row * 3 + col] != symbol) {
                     noOthers = false;
                 }
