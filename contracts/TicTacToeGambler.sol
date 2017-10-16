@@ -20,7 +20,7 @@ contract TicTacToeGambler is Gambler {
         address _opponent,
         uint _timePerTurn
     ) public {
-        Gambler(msg.sender, _opponent);
+        Gambler(msg.sender, _opponent, _timePerTurn);
 
         // default to 120 seconds (2 minutes)
         if(timePerTurn == 0) {
