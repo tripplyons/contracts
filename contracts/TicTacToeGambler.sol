@@ -6,7 +6,7 @@ pragma solidity 0.4.15;
 
 import "./Gambler.sol";
 
-// creator is X, opponent is O
+// empty is 0, creator is 1 (X), opponent is 2 (O) on the board
 contract TicTacToeGambler is Gambler {
     enum BoardSpace { Empty, X, O }
     // board:
@@ -14,6 +14,8 @@ contract TicTacToeGambler is Gambler {
     // 3 4 5
     // 6 7 8
     BoardSpace[9] public board;
+
+    event Turn(uint position, BoardSpace contents);
 
     function TicTacToeGambler(
         address _opponent,
@@ -43,17 +45,21 @@ contract TicTacToeGambler is Gambler {
             require(isCreatorsTurn);
             require(board[position] == BoardSpace.Empty);
             board[position] = BoardSpace.X;
+            Turn(position, BoardSpace.X);
         }
         // opponent's turn
         if(msg.sender == opponent) {
             require(!isCreatorsTurn);
             require(board[position] == BoardSpace.Empty);
             board[position] = BoardSpace.O;
+            Turn(position, BoardSpace.O);
         }
         // see the outcome of the game
         var winState = checkForEnd();
 
         handleWinState(winState);
+
+        nextTurn();
     }
 
     // row win

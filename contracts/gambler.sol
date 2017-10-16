@@ -81,8 +81,7 @@ contract Gambler {
         // either player can cancel the bet if they do not like the deal
         require(msg.sender == creator || msg.sender == opponent);
         // send back the bets
-        creator.transfer(creatorBet);
-        opponent.transfer(opponentBet);
+        tie();
     }
 
     // make sure to call this if your opponent takes too long
