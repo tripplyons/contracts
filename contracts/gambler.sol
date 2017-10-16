@@ -26,6 +26,29 @@ contract Gambler {
     uint public timePerTurn;
 
     event GameStart();
+    event GameEnd(WinState winState);
+
+    function Gambler(_creator, _opponent, _timePerTurn) {
+        creator = _creator;
+        opponent = _opponent;
+
+        // creator goes first
+        isCreatorsTurn = true;
+
+        // don't start now, players haven't betted yet
+        timeOfLastTurn = 0;
+        gameStarted = false;
+
+        timePerTurn = _timePerTurn;
+
+        // default bets to 0
+        creatorBet = 0;
+        opponentBet = 0;
+
+        // neither player has accpeted the bet yet
+        creatorAccepted = false;
+        opponentAccepted = false;
+    }
 
     // anyone can put ether in to go to the winner
     function bet() public payable {

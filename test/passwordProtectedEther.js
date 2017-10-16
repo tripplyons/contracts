@@ -11,6 +11,7 @@ const wrongHash = web3.sha3(wrongPassword)
 const amountOfEther = web3.toWei(1, "ether")
 
 contract("PasswordProtectedEther", function(accounts) {
+    // store the instance for later
     var depositedInstance;
     it("should change the balance", function() {
         depositedInstance = PasswordProtectedEther.new()

@@ -20,26 +20,9 @@ contract TicTacToeGambler is Gambler {
         address _opponent,
         uint _timePerTurn
     ) public {
-        creator = msg.sender;
-        opponent = _opponent;
-
-        // creator goes first
-        isCreatorsTurn = true;
-
-        // don't start now, players haven't betted yet
-        timeOfLastTurn = 0;
-        gameStarted = false;
-
-        // default bets to 0
-        creatorBet = 0;
-        opponentBet = 0;
-
-        // neither player has accpeted the bet yet
-        creatorAccepted = false;
-        opponentAccepted = false;
+        Gambler(msg.sender, _opponent);
 
         // default to 120 seconds (2 minutes)
-        timePerTurn = _timePerTurn;
         if(timePerTurn == 0) {
             timePerTurn = 120;
         }
@@ -87,7 +70,7 @@ contract TicTacToeGambler is Gambler {
     // row win
     function checkForRowWin(
         BoardSpace symbol
-    ) internal constant returns (bool win) {
+    ) internal constant returns (bool) {
         for(uint row = 0; row < 3; row++) {
             // no other symbols
             bool noOthers = true;
@@ -106,7 +89,7 @@ contract TicTacToeGambler is Gambler {
     // column win
     function checkForColumnWin(
         BoardSpace symbol
-    ) internal constant returns (bool win) {
+    ) internal constant returns (bool) {
         for(uint col = 0; col < 3; col++) {
             // no other symbols
             bool noOthers = true;
@@ -148,7 +131,7 @@ contract TicTacToeGambler is Gambler {
         return downLeftWin;
     }
 
-    function checkForWin(BoardSpace symbol) internal constant returns (bool win) {
+    function checkForWin(BoardSpace symbol) internal constant returns (bool) {
         if(checkForRowWin(symbol)) {
             return true;
         }
