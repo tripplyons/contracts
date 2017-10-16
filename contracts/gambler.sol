@@ -6,6 +6,8 @@ pragma solidity 0.4.15;
 
 // generalized game gambling manager
 contract Gambler {
+    enum WinState { Neither, Creator, Opponent, Tie }
+
     // the creator of the contract
     address public creator;
     // the player that plays against the creator
@@ -28,7 +30,7 @@ contract Gambler {
     event GameStart();
     event GameEnd(WinState winState);
 
-    function Gambler(_creator, _opponent, _timePerTurn) {
+    function Gambler(address _creator, address _opponent, uint _timePerTurn) {
         creator = _creator;
         opponent = _opponent;
 
@@ -103,7 +105,7 @@ contract Gambler {
     }
 
     function tie() internal {
-        // make sure that the extra money paid to the contract by ...
+        // make sure that the extra ether paid to the contract by ...
         // ... non-players is split like the bet
         var betFromPlayers = creatorBet + opponentBet;
         creator.transfer(creatorBet / betFromPlayers * this.balance);
@@ -116,5 +118,22 @@ contract Gambler {
     function nextTurn() internal {
         isCreatorsTurn = !isCreatorsTurn;
         timeOfLastTurn = now;
+    }
+
+
+    // handle end conditions if they exist
+    function handleWinState(WinState winState) internal {
+        if(winState == WinState.Tie) {
+            GameEnd(winState);
+            tie();
+        }
+        if(winState == WinState.Creator) {
+            GameEnd(winState);
+            creatorWin();
+        }
+        if(winState == WinState.Opponent) {
+            GameEnd(winState);
+            opponentWin();
+        }
     }
 }

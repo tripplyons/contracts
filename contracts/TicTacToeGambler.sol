@@ -9,7 +9,6 @@ import "./Gambler.sol";
 // creator is X, opponent is O
 contract TicTacToeGambler is Gambler {
     enum BoardSpace { Empty, X, O }
-    enum WinState { Neither, X, O, Tie }
     // board:
     // 0 1 2
     // 3 4 5
@@ -19,9 +18,7 @@ contract TicTacToeGambler is Gambler {
     function TicTacToeGambler(
         address _opponent,
         uint _timePerTurn
-    ) public {
-        Gambler(msg.sender, _opponent, _timePerTurn);
-
+    ) Gambler(msg.sender, _opponent, _timePerTurn) {
         // default to 120 seconds (2 minutes)
         if(timePerTurn == 0) {
             timePerTurn = 120;
@@ -54,17 +51,9 @@ contract TicTacToeGambler is Gambler {
             board[position] = BoardSpace.O;
         }
         // see the outcome of the game
-        var gameState = checkForEnd();
-        // handle end conditions if they exist
-        if(gameState == WinState.Tie) {
-            tie();
-        }
-        if(gameState == WinState.X) {
-            creatorWin();
-        }
-        if(gameState == WinState.O) {
-            opponentWin();
-        }
+        var winState = checkForEnd();
+
+        handleWinState(winState);
     }
 
     // row win
@@ -146,10 +135,10 @@ contract TicTacToeGambler is Gambler {
 
     function checkForEnd() internal constant returns (WinState) {
         if(checkForWin(BoardSpace.X)) {
-            return WinState.X;
+            return WinState.Creator;
         }
         if(checkForWin(BoardSpace.O)) {
-            return WinState.O;
+            return WinState.Opponent;
         }
 
         // then check if it is full (a tie)
