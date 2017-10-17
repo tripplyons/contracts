@@ -45,10 +45,8 @@ contract("TicTacToeGambler", function(accounts) {
                                             instance.turn(6, {
                                                 from: accounts[0]
                                             }).then(function() {
-                                                setTimeout(function() {
-                                                    // X should win
-                                                    assert(getBalance(accounts[0]) > XStartBalance, "X didn't win")
-                                                }, 500)
+                                                // X should win
+                                                assert(getBalance(accounts[0]) > XStartBalance, "X didn't win")
                                             })
                                         })
                                     })
